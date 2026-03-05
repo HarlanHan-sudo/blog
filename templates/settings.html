@@ -1,0 +1,40 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div class="card" style="max-width: 800px; margin: 0 auto;">
+    <div style="margin-bottom: 30px; border-bottom: 1px solid #edf2f7; padding-bottom: 15px;">
+        <h3>⚙️ 系统全局设置</h3>
+        <p style="color: #718096; font-size: 0.9em; margin-top: 5px;">管理博客的基础信息与 SEO 配置（键值对存储，可无限扩展）。</p>
+    </div>
+
+    <form method="post" action="/settings/update">
+        <div style="display: grid; grid-template-columns: 1fr; gap: 20px;">
+            
+            <div class="form-group" style="margin-bottom: 0;">
+                <label>博客名称 (Blog Title)</label>
+                <input type="text" name="blog_title" value="{{ settings.blog_title | default('') }}" placeholder="例如：我的超级博客" required>
+            </div>
+
+            <div class="form-group" style="margin-bottom: 0;">
+                <label>SEO 关键词 (Keywords)</label>
+                <input type="text" name="seo_keywords" value="{{ settings.seo_keywords | default('') }}" placeholder="用英文逗号分隔，例如：Python, FastAPI, 博客">
+            </div>
+
+            <div class="form-group" style="margin-bottom: 0;">
+                <label>SEO 描述 (Description)</label>
+                <textarea name="seo_description" rows="3" placeholder="一段介绍博客的描述文字，用于搜索引擎抓取">{{ settings.seo_description | default('') }}</textarea>
+            </div>
+
+            <div class="form-group" style="margin-bottom: 0;">
+                <label>页脚信息 (Footer Text)</label>
+                <input type="text" name="footer_text" value="{{ settings.footer_text | default('') }}" placeholder="例如：© 2026 My Blog. All rights reserved.">
+            </div>
+
+        </div>
+
+        <div style="margin-top: 30px; display: flex; justify-content: flex-end; padding-top: 20px; border-top: 1px solid #edf2f7;">
+            <button type="submit" class="btn btn-primary" style="padding: 12px 30px; font-size: 1.1em;">💾 保存设置更改</button>
+        </div>
+    </form>
+</div>
+{% endblock %}

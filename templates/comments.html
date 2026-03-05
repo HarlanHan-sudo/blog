@@ -1,0 +1,61 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div class="card">
+    <div style="margin-bottom: 20px;">
+        <h3>💬 评论管理</h3>
+        <p style="color: #718096; font-size: 0.9em; margin-top: 5px;">管理读者对文章的评论留言。未审核的评论不会在前端展示。</p>
+    </div>
+
+    <table>
+        <thead>
+            <tr>
+                <th width="80">ID</th>
+                <th width="200">所属文章</th>
+                <th>评论内容</th>
+                <th width="120">状态</th>
+                <th width="150">时间</th>
+                <th width="160">操作</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for item in items %}
+            <tr>
+                <td>{{ item.id }}</td>
+                <td style="font-weight: 500; color: var(--primary);">
+                    {{ item.article.title if item.article else '文章已删除' }}
+                </td>
+                <td style="color: #4a5568;">{{ item.content }}</td>
+                <td>
+                    {% if item.is_approved %}
+                        <span class="badge badge-success">已审核 (展示)</span>
+                    {% else %}
+                        <span class="badge" style="background: #fed7d7; color: #c53030;">待审核 (隐藏)</span>
+                    {% endif %}
+                </td>
+                <td style="color: #718096; font-size: 0.85em;">{{ item.created_at.strftime('%Y-%m-%d %H:%M') }}</td>
+                <td style="display: flex; gap: 8px;">
+                    <form method="post" action="/comments/toggle_status/{{ item.id }}">
+                        <button type="submit" class="btn btn-sm {% if item.is_approved %}btn-cancel{% else %}btn-primary{% endif %}">
+                            {% if item.is_approved %}撤下{% else %}通过{% endif %}
+                        </button>
+                    </form>
+                    <form method="post" action="/comments/delete/{{ item.id }}" onsubmit="return confirm('确定要永久删除该评论吗？');">
+                        <button type="submit" class="btn btn-danger btn-sm">删除</button>
+                    </form>
+                </td>
+            </tr>
+            {% endfor %}
+            {% if not items %}
+            <tr><td colspan="6" style="text-align: center; padding: 30px; color: #a0aec0;">暂无评论数据</td></tr>
+            {% endif %}
+        </tbody>
+    </table>
+
+    <div style="margin-top: 25px; display: flex; gap: 5px; justify-content: center;">
+        {% for p in range(1, total_pages + 1) %}
+            <a href="/comments?page={{ p }}" class="btn {% if p == page %}btn-primary{% else %}btn-cancel{% endif %} btn-sm" style="text-decoration: none;">{{ p }}</a>
+        {% endfor %}
+    </div>
+</div>
+{% endblock %}

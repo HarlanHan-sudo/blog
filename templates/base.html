@@ -1,0 +1,106 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <title>博客管理后台</title>
+    <style>
+        :root {
+            --primary: #667eea;
+            --secondary: #764ba2;
+            --bg: #f3f4f6;
+            --surface: #ffffff;
+            --text-main: #2d3748;
+            --radius: 16px;
+            --shadow: 0 10px 25px rgba(0,0,0,0.05);
+        }
+        * { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Segoe UI', system-ui, sans-serif; }
+        body { display: flex; height: 100vh; background: var(--bg); color: var(--text-main); }
+
+        /* 侧边栏 */
+        .sidebar {
+            width: 260px; background: linear-gradient(180deg, var(--primary) 0%, var(--secondary) 100%);
+            color: white; display: flex; flex-direction: column; padding: 20px 0;
+            box-shadow: 5px 0 15px rgba(0,0,0,0.1); border-top-right-radius: 20px; border-bottom-right-radius: 20px; z-index: 10;
+        }
+        .sidebar h2 { text-align: center; margin-bottom: 40px; letter-spacing: 2px; text-shadow: 0 2px 4px rgba(0,0,0,0.2); }
+        .sidebar a {
+            padding: 15px 30px; color: rgba(255,255,255,0.8); text-decoration: none;
+            transition: 0.3s; font-weight: 500; border-left: 5px solid transparent;
+        }
+        .sidebar a:hover, .sidebar a.active {
+            background: rgba(255,255,255,0.1); color: white; border-left-color: #fff;
+        }
+        .user-info { margin-top: auto; padding: 20px; text-align: center; border-top: 1px solid rgba(255,255,255,0.2); }
+        .user-info a { padding: 8px 15px; background: rgba(255,255,255,0.2); border-radius: 8px; display: inline-block; margin-top: 10px;}
+
+        /* 主内容区 */
+        .main-content { flex: 1; padding: 30px; overflow-y: auto; }
+        .card {
+            background: var(--surface); border-radius: var(--radius); padding: 30px;
+            box-shadow: var(--shadow); margin-bottom: 20px;
+        }
+
+        /* 按钮与表单 */
+        .btn {
+            padding: 10px 20px; border: none; border-radius: 8px; cursor: pointer;
+            font-weight: 600; transition: 0.3s; color: white;
+        }
+        .btn-primary { background: linear-gradient(to right, var(--primary), var(--secondary)); }
+        .btn-primary:hover { box-shadow: 0 5px 15px rgba(102,126,234,0.4); transform: translateY(-2px); }
+        .btn-danger { background: #fc8181; }
+        .btn-danger:hover { background: #e53e3e; }
+        .btn-sm { padding: 6px 12px; font-size: 0.85em; }
+
+        input[type="text"], select, textarea {
+            width: 100%; padding: 12px; border: 1px solid #e2e8f0; border-radius: 8px; outline: none; transition: 0.3s;
+        }
+        input:focus, select:focus, textarea:focus { border-color: var(--primary); box-shadow: 0 0 0 3px rgba(102,126,234,0.1); }
+
+        /* 表格 */
+        table { width: 100%; border-collapse: collapse; margin-top: 20px; }
+        th, td { padding: 15px; text-align: left; border-bottom: 1px solid #edf2f7; }
+        th { color: #718096; font-size: 0.85em; text-transform: uppercase; }
+        tr:hover { background: #f7fafc; }
+        .badge { padding: 4px 8px; border-radius: 6px; font-size: 0.75em; background: #ebf4ff; color: #3182ce; margin-right: 5px; }
+        .badge-success { background: #c6f6d5; color: #2f855a; }
+
+        /* 模态框 */
+        .modal {
+            display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+            background: rgba(0,0,0,0.4); backdrop-filter: blur(4px); z-index: 100;
+            justify-content: center; align-items: center; opacity: 0; transition: 0.3s;
+        }
+        .modal.show { display: flex; opacity: 1; }
+        .modal-content {
+            background: white; padding: 30px; border-radius: var(--radius); width: 600px;
+            box-shadow: 0 20px 40px rgba(0,0,0,0.2); transform: scale(0.95); transition: 0.3s;
+        }
+        .modal.show .modal-content { transform: scale(1); }
+        .form-group { margin-bottom: 15px; }
+        .form-group label { display: block; margin-bottom: 5px; font-weight: 500; }
+        .form-actions { display: flex; justify-content: flex-end; gap: 10px; margin-top: 20px; }
+        .btn-cancel { background: #e2e8f0; color: #4a5568; }
+    </style>
+</head>
+<body>
+    <div class="sidebar">
+        <h2>BLOG ADMIN</h2>
+        <a href="/articles" class="{% if active == 'articles' %}active{% endif %}">📝 文章管理</a>
+        <a href="/taxonomy" class="{% if active == 'taxonomy' %}active{% endif %}">🏷️ 分类与标签</a>
+        <a href="/comments" class="{% if active == 'comments' %}active{% endif %}">💬 评论管理</a>
+        <a href="/settings" class="{% if active == 'settings' %}active{% endif %}">⚙️ 系统设置</a>
+        <div class="user-info">
+            <p>你好, {{ user.username }}</p>
+            <a href="/logout">退出登录</a>
+        </div>
+    </div>
+    <div class="main-content">
+        {% block content %}{% endblock %}
+    </div>
+
+    <script>
+        function openModal(id) { document.getElementById(id).classList.add('show'); }
+        function closeModal(id) { document.getElementById(id).classList.remove('show'); }
+    </script>
+</body>
+</html>

@@ -1,0 +1,71 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div style="display: grid; grid-template-columns: 1fr 1fr; gap: 30px;">
+    
+    <div class="card">
+        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px;">
+            <h3>📁 分类管理</h3>
+            <button class="btn btn-primary btn-sm" onclick="openModal('addCategoryModal')">+ 新增分类</button>
+        </div>
+        <table>
+            <thead><tr><th>ID</th><th>分类名称</th></tr></thead>
+            <tbody>
+                {% for cat in categories %}
+                <tr><td>{{ cat.id }}</td><td>{{ cat.name }}</td></tr>
+                {% else %}
+                <tr><td colspan="2" style="text-align: center;">暂无分类</td></tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+
+    <div class="card">
+        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px;">
+            <h3>🏷️ 标签管理</h3>
+            <button class="btn btn-primary btn-sm" onclick="openModal('addTagModal')">+ 新增标签</button>
+        </div>
+        <div style="display: flex; flex-wrap: wrap; gap: 10px;">
+            {% for tag in tags %}
+            <span class="badge" style="padding: 8px 15px; font-size: 0.9em; background: #fff; border: 1px solid #e2e8f0; color: var(--text-main); box-shadow: var(--shadow);">
+                # {{ tag.name }}
+            </span>
+            {% else %}
+            <p style="color: #a0aec0;">暂无标签</p>
+            {% endfor %}
+        </div>
+    </div>
+</div>
+
+<div id="addCategoryModal" class="modal">
+    <div class="modal-content" style="width: 400px;">
+        <h3 style="margin-bottom: 20px;">新增分类</h3>
+        <form method="post" action="/taxonomy/category/add">
+            <div class="form-group">
+                <label>分类名称</label>
+                <input type="text" name="name" required>
+            </div>
+            <div class="form-actions">
+                <button type="button" class="btn btn-cancel" onclick="closeModal('addCategoryModal')">取消</button>
+                <button type="submit" class="btn btn-primary">保存</button>
+            </div>
+        </form>
+    </div>
+</div>
+
+<div id="addTagModal" class="modal">
+    <div class="modal-content" style="width: 400px;">
+        <h3 style="margin-bottom: 20px;">新增标签</h3>
+        <form method="post" action="/taxonomy/tag/add">
+            <div class="form-group">
+                <label>标签名称</label>
+                <input type="text" name="name" required>
+            </div>
+            <div class="form-actions">
+                <button type="button" class="btn btn-cancel" onclick="closeModal('addTagModal')">取消</button>
+                <button type="submit" class="btn btn-primary">保存</button>
+            </div>
+        </form>
+    </div>
+</div>
+{% endblock %}
